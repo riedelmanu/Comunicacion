@@ -2,52 +2,76 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-// Args: [ipRemota] [puertoLocal] [puertoRemoto]
-if (args.Length < 3)
+// Args: [puertoLocal] [puertoRemoto] [modo] [rol]
+if (args.Length < 4)
 {
-    Console.WriteLine("Uso: UdpChat <ipRemota> <puertoLocal> <puertoRemoto>");
+    Console.WriteLine("Uso: Handshake <puertoLocal> <puertoRemoto> <modo:2|3|4> <rol:cliente|servidor>");
     return;
 }
 
-string remoteIp = args[0];
-int localPort = int.Parse(args[1]);
-int remotePort = int.Parse(args[2]);
+int localPort = int.Parse(args[0]);
+int remotePort = int.Parse(args[1]);
+int modo = int.Parse(args[2]); // 2,3,4
+string rol = args[3].ToLower();
 
-// Crear socket UDP
-Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+UdpClient udp = new UdpClient(localPort);
+IPEndPoint remote = new IPEndPoint(IPAddress.Loopback, remotePort);
 
-// Asociar al puerto local
-socket.Bind(new IPEndPoint(IPAddress.Any, localPort));
-
-// Definir el endpoint remoto
-IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse(remoteIp), remotePort);
-
-// Hilo para escuchar mensajes entrantes
-Thread receiver = new Thread(() =>
+void Send(string msg)
 {
-    byte[] buffer = new byte[1024];
-    EndPoint remote = new IPEndPoint(IPAddress.Any, 0);
+    byte[] data = Encoding.UTF8.GetBytes(msg);
+    udp.Send(data, data.Length, remote);
+    Console.WriteLine($"[ENVIADO] {msg}");
+}
 
-    while (true)
+string Receive()
+{
+    IPEndPoint anyRemote = new IPEndPoint(IPAddress.Any, 0); // inicializado
+    var res = udp.Receive(ref anyRemote);
+    string msg = Encoding.UTF8.GetString(res);
+    Console.WriteLine($"[RECIBIDO] {msg} desde {anyRemote}");
+    return msg;
+}
+
+if (rol == "cliente")
+{
+    if (modo == 2)
     {
-        int bytes = socket.ReceiveFrom(buffer, ref remote);
-        string msg = Encoding.UTF8.GetString(buffer, 0, bytes);
-        Console.WriteLine($"[RECIBIDO] {msg}");
+        Send("SYN");
+        Receive(); // ACK
     }
-});
-receiver.IsBackground = true;
-receiver.Start();
-
-// Bucle de envío
-Console.WriteLine($"Chat UDP iniciado. Local {localPort}, Remoto {remoteIp}:{remotePort}");
-Console.WriteLine("Escriba mensajes y Enter para enviar. /q para salir.");
-
-while (true)
+    else if (modo == 3)
+    {
+        Send("SYN");
+        Receive(); // SYN-ACK
+        Send("ACK");
+    }
+    else if (modo == 4)
+    {
+        Send("SYN");
+        Receive(); // SYN-ACK
+        Send("ACK");
+        Receive(); // FINAL-ACK
+    }
+}
+else if (rol == "servidor")
 {
-    string? line = Console.ReadLine();
-    if (string.IsNullOrEmpty(line)) continue;
-    if (line.Trim() == "/q") break;
-
-    byte[] data = Encoding.UTF8.GetBytes(line);
-    socket.SendTo(data, remoteEndPoint);
+    if (modo == 2)
+    {
+        Receive(); // SYN
+        Send("ACK");
+    }
+    else if (modo == 3)
+    {
+        Receive(); // SYN
+        Send("SYN-ACK");
+        Receive(); // ACK
+    }
+    else if (modo == 4)
+    {
+        Receive(); // SYN
+        Send("SYN-ACK");
+        Receive(); // ACK
+        Send("FINAL-ACK");
+    }
 }

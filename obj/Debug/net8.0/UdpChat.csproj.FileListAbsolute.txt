@@ -26,10 +26,10 @@ C:\Users\Manuel\source\repos\comunicacion\UdpChat\UdpChat\obj\Debug\net8.0\stati
 C:\Users\Manuel\source\repos\comunicacion\UdpChat\UdpChat\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\Manuel\source\repos\comunicacion\UdpChat\UdpChat\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\Manuel\source\repos\comunicacion\UdpChat\UdpChat\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\Manuel\source\repos\comunicacion\UdpChat\UdpChat\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Manuel\source\repos\comunicacion\UdpChat\UdpChat\obj\Debug\net8.0\UdpChat.csproj.Up2Date
 C:\Users\Manuel\source\repos\comunicacion\UdpChat\UdpChat\obj\Debug\net8.0\UdpChat.dll
 C:\Users\Manuel\source\repos\comunicacion\UdpChat\UdpChat\obj\Debug\net8.0\refint\UdpChat.dll
 C:\Users\Manuel\source\repos\comunicacion\UdpChat\UdpChat\obj\Debug\net8.0\UdpChat.pdb
 C:\Users\Manuel\source\repos\comunicacion\UdpChat\UdpChat\obj\Debug\net8.0\UdpChat.genruntimeconfig.cache
 C:\Users\Manuel\source\repos\comunicacion\UdpChat\UdpChat\obj\Debug\net8.0\ref\UdpChat.dll
+C:\Users\Manuel\source\repos\Comunicacion\UdpChat\UdpChat\obj\Debug\net8.0\UdpChat.sourcelink.json
